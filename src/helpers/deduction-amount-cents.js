@@ -1,0 +1,4 @@
+var STRIPE_DEDUCTION_PCNT = 2.9 / 100
+var STRIPE_DEDUCTION_CENTS = 30
+
+module.exports = amount => Math.round((amount * STRIPE_DEDUCTION_PCNT) + STRIPE_DEDUCTION_CENTS)
