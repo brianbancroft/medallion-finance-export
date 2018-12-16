@@ -10,7 +10,8 @@ export default ({ rawData } = {}) => {
   let header
   const rows = []
   const fullRecords = []
-  const donorListCSVExport = []
+  let donorListCSVExport = ''
+  let summaryListCSVExport = ''
   const errors = []
 
   const desiredColumns = [
@@ -26,7 +27,7 @@ export default ({ rawData } = {}) => {
   const data = compact(rawData.split('\n'))
 
   const fullAddress = (address, city, state, zip) =>
-    `${address}, ${city} ${state}, ${zip}`
+    `${address} - ${city} ${state} - ${zip}`
 
   // Break content into rows and header
   for (let i = 0; i < data.length; i++) {
@@ -107,9 +108,12 @@ export default ({ rawData } = {}) => {
 
   console.log('Donor List csv export -> ', exportableRecords)
 
-  donorListCSVExport.push(Object.keys(exportableRecords[0]).join(', ') + '\n')
-  exportableRecords.forEach(i =>
-    donorListCSVExport.push(Object.values(i).join(', ') + '\n')
+  donorListCSVExport += Object.keys(exportableRecords[0]).join(', ') + '\n'
+  exportableRecords.forEach(
+    i =>
+      (donorListCSVExport += `${i.name},${i.address},${i.donated_amount},${
+        i.processor_deducation
+      },${i.deposited_amount}\n`)
   )
 
   return errors.length > 0
@@ -120,5 +124,6 @@ export default ({ rawData } = {}) => {
     : {
         success: true,
         donorListCSVExport,
+        summaryListCSVExport,
       }
 }

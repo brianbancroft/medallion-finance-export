@@ -58,6 +58,7 @@ const Main = ({
   errors,
   success,
   donorListCSVExport,
+  summaryListCSVExport,
 } = {}) => {
   const downloadCsvFile = ({ data, filename }) => () => {
     var element = document.createElement('a')
@@ -124,12 +125,19 @@ const Main = ({
                     })}
                     disabled={!success}
                   >
-                    Donor List
+                    Elections Canada EFR List
                   </Button>
-                  <Button.Or />
-                  <Button color="blue" disabled={!success}>
-                    The other list...
-                  </Button>
+                  {/* <Button.Or />
+                  <Button
+                    color="blue"
+                    onClick={downloadCsvFile({
+                      filename: 'donor-list',
+                      data: donorListCSVExport,
+                    })}
+                    disabled={!success}
+                  >
+                    Summary Records List
+                  </Button> */}
                 </Button.Group>
                 <br />
                 <br />

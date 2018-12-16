@@ -9,6 +9,7 @@ class App extends Component {
       viewModal: false,
       csvContent: null,
       donorListCSVExport: '',
+      summaryListCSVExport: '',
       errors: [],
       success: false,
     }
@@ -61,6 +62,7 @@ class App extends Component {
         <Main
           handleCSVChange={this.handleCSVChange.bind(this)}
           donorListCSVExport={this.state.donorListCSVExport}
+          summaryListCSVExport={this.state.summaryListCSVExport}
           errors={this.state.errors}
           success={this.state.success}
         />
