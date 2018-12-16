@@ -53,73 +53,97 @@ const instructions = ({ success, errors }) =>
     <></>
   )
 
-const Main = ({ handleCSVChange, errors, success } = {}) => (
-  <MainSection>
-    <div className="container">
-      <NoMobileSupport />
+const Main = ({
+  handleCSVChange,
+  errors,
+  success,
+  donorListCSVExport,
+} = {}) => {
+  const downloadCsvFile = ({ data, filename }) => () => {
+    var element = document.createElement('a')
+    var file = new Blob([data], {
+      type: 'text/csv',
+    })
+    element.href = URL.createObjectURL(file)
+    element.download = filename
+    element.click()
+  }
 
-      <PreventMobileSupport>
-        <h2>
-          Clean your mEDAllion finance file - in <em>three</em> easy steps
-        </h2>
-        <TopInstructionCard />
+  return (
+    <MainSection>
+      <div className="container">
+        <NoMobileSupport />
 
-        <Card fluid>
-          <Card.Content>
-            <Card.Header>2. Submit the CSV for Conversion</Card.Header>
+        <PreventMobileSupport>
+          <h2>
+            Clean your mEDAllion finance file - in <em>three</em> easy steps
+          </h2>
+          <TopInstructionCard />
 
-            <Card.Description>
-              <Form success={success} error={errors.length > 0}>
-                <Form.Group style={{ width: '100%', marginLeft: '0px' }}>
-                  {' '}
-                  <Input
-                    fluid
-                    type="file"
-                    name="file"
-                    icon="file text outline"
-                    iconPosition="left"
-                    placeholder="UploadCSV..."
-                    onChange={handleCSVChange}
-                  />
-                  <input id="file" hidden type="file" />
-                </Form.Group>
-                {errorList(errors)}
-                <SuccessMessage />
-              </Form>
-              {instructions({ success, errors })}
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            Make sure you're using the exact file submitted by your Medallion
-            app!
-          </Card.Content>
-        </Card>
-        <Card fluid>
-          <Card.Content>
-            <Card.Header>3. Download your Files!</Card.Header>
+          <Card fluid>
+            <Card.Content>
+              <Card.Header>2. Submit the CSV for Conversion</Card.Header>
 
-            <Card.Description>
-              <Button.Group size="large" fluid>
-                <Button color="teal" disabled={!success}>
-                  Donor List
-                </Button>
-                <Button.Or />
-                <Button color="blue" disabled={!success}>
-                  The other list...
-                </Button>
-              </Button.Group>
-              <br />
-              <br />
-              Here, we have one output format useful when you have to build tax
-              recipets, and another format suitable for your own records.
-              Download either or both!
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>Be sure to allow downloads!</Card.Content>
-        </Card>
-      </PreventMobileSupport>
-    </div>
-  </MainSection>
-)
+              <Card.Description>
+                <Form success={success} error={errors.length > 0}>
+                  <Form.Group style={{ width: '100%', marginLeft: '0px' }}>
+                    {' '}
+                    <Input
+                      fluid
+                      type="file"
+                      name="file"
+                      icon="file text outline"
+                      iconPosition="left"
+                      placeholder="UploadCSV..."
+                      onChange={handleCSVChange}
+                    />
+                    <input id="file" hidden type="file" />
+                  </Form.Group>
+                  {errorList(errors)}
+                  <SuccessMessage />
+                </Form>
+                {instructions({ success, errors })}
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              Make sure you're using the exact file submitted by your Medallion
+              app!
+            </Card.Content>
+          </Card>
+          <Card fluid>
+            <Card.Content>
+              <Card.Header>3. Download your Files!</Card.Header>
+
+              <Card.Description>
+                <Button.Group size="large" fluid>
+                  <Button
+                    color="teal"
+                    onClick={downloadCsvFile({
+                      filename: 'donor-list',
+                      data: donorListCSVExport,
+                    })}
+                    disabled={!success}
+                  >
+                    Donor List
+                  </Button>
+                  <Button.Or />
+                  <Button color="blue" disabled={!success}>
+                    The other list...
+                  </Button>
+                </Button.Group>
+                <br />
+                <br />
+                Here, we have one output format useful when you have to build
+                tax recipets, and another format suitable for your own records.
+                Download either or both!
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>Be sure to allow downloads!</Card.Content>
+          </Card>
+        </PreventMobileSupport>
+      </div>
+    </MainSection>
+  )
+}
 
 export default Main

@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Main, Footer, PrivacyModal } from './components'
 import { convertSpreadsheet } from './helpers'
+
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       viewModal: false,
       csvContent: null,
-      csvExport: null,
+      donorListCSVExport: '',
       errors: [],
       success: false,
     }
@@ -28,10 +29,9 @@ class App extends Component {
   checkSpreadsheet() {
     const rawData = this.state.csvContent
     const conversion = convertSpreadsheet({ rawData })
-    console.log('conversion results -> ', conversion)
     if (conversion.success) {
-      const { csvExport, success } = conversion
-      this.setState({ csvExport, success })
+      const { donorListCSVExport, success } = conversion
+      this.setState({ donorListCSVExport, success })
     } else {
       const { errors, success } = conversion
       this.setState({ errors, success })
@@ -60,6 +60,7 @@ class App extends Component {
         />
         <Main
           handleCSVChange={this.handleCSVChange.bind(this)}
+          donorListCSVExport={this.state.donorListCSVExport}
           errors={this.state.errors}
           success={this.state.success}
         />

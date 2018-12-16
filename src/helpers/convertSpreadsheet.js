@@ -10,7 +10,7 @@ export default ({ rawData } = {}) => {
   let header
   const rows = []
   const fullRecords = []
-  const csvExport = []
+  const donorListCSVExport = []
   const errors = []
 
   const desiredColumns = [
@@ -54,6 +54,7 @@ export default ({ rawData } = {}) => {
   }
 
   // Get the column index for the desired content
+  // TODO: Readability refactor
   for (let i = 0; i < desiredColumns.length; i++) {
     const itemIndex = header.indexOf(desiredColumns[i])
     if (itemIndex !== -1) {
@@ -88,10 +89,10 @@ export default ({ rawData } = {}) => {
       fullRecords[i]['deposited_amount_cents']
     )
     fullRecords[i]['full_text_address'] = fullAddress(
-      fullRecords[i]['address1'],
-      fullRecords[i]['city'],
-      fullRecords[i]['state'],
-      fullRecords[i]['zip']
+      fullRecords[i]['billing_address1'],
+      fullRecords[i]['billing_city'],
+      fullRecords[i]['billing_state'],
+      fullRecords[i]['billing_zip']
     )
   }
 
@@ -104,8 +105,12 @@ export default ({ rawData } = {}) => {
     deposited_amount: i.deposited_amount_dollars,
   }))
 
-  csvExport.push(Object.keys(exportableRecords[0]).join(', '))
-  exportableRecords.forEach(i => csvExport.push(Object.values(i).join(', ')))
+  console.log('Donor List csv export -> ', exportableRecords)
+
+  donorListCSVExport.push(Object.keys(exportableRecords[0]).join(', ') + '\n')
+  exportableRecords.forEach(i =>
+    donorListCSVExport.push(Object.values(i).join(', ') + '\n')
+  )
 
   return errors.length > 0
     ? {
@@ -114,6 +119,6 @@ export default ({ rawData } = {}) => {
       }
     : {
         success: true,
-        data: csvExport,
+        donorListCSVExport,
       }
 }
