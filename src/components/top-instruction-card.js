@@ -3,9 +3,11 @@ import { Card, Image } from 'semantic-ui-react'
 
 export default () => (
   <Card fluid>
-    <Image src="/export-finances.jpg" />
+    <a href="/export-finances.jpg" target="_blank">
+      <Image src="/export-finances.jpg" />
+    </a>
     <Card.Content>
-      <Card.Header>Export your finance CSV</Card.Header>
+      <Card.Header>1. Export your finance CSV from Medallion</Card.Header>
 
       <Card.Description>
         Download the spreadsheet in csv straight from your medallion site

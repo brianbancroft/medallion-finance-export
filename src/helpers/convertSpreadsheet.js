@@ -89,7 +89,7 @@ export default ({ data } = {}) => {
   csvExport.push(Object.keys(exportableRecords[0]).join(', '))
   exportableRecords.forEach(i => csvExport.push(Object.values(i).join(', ')))
 
-  return errors
+  return errors.length > 0
     ? {
         success: false,
         errors,

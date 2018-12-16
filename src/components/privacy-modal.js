@@ -24,6 +24,7 @@ const PrivacyModal = ({ viewModal, toggleModal }) => (
           <a
             href="https://github.com/brianbancroft/medallion-finance-export"
             target="_blank"
+            rel="noopener noreferrer"
           >
             See the code for yourself. Build it. Test it.
           </a>

@@ -42,7 +42,11 @@ const FooterSection = styled.footer`
 const Footer = ({ toggleModal } = {}) => (
   <FooterSection>
     <div className="left-matter">
-      <a href="//www.mississauga-lakeshoreconservative.com/" target="_blank">
+      <a
+        href="//www.mississauga-lakeshoreconservative.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <div className="item">Built in Mississauga-Lakeshore</div>
       </a>
     </div>
@@ -50,6 +54,7 @@ const Footer = ({ toggleModal } = {}) => (
       <a
         href="https://github.com/brianbancroft/medallion-finance-export"
         target="_blank"
+        rel="noopener noreferrer"
       >
         <div className="item">
           <Icon name="github" />

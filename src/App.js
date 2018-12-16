@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Main, Footer, PrivacyModal } from './components'
-
+import { convertSpreadsheet } from './helpers'
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       viewModal: false,
       csvContent: null,
+      csvExport: null,
       errors: [],
       success: false,
     }
@@ -24,11 +25,30 @@ class App extends Component {
     this.setState({ errors: this.state.errors.push({ title, message }) })
   }
 
-  async handleCSVChange(e) {
-    const fileReader = new FileReader()
-    const upload = e.target.files[0]
-    await fileReader.readAsText(upload)
-    this.setState({ csvContent: fileReader.result })
+  checkSpreadsheet() {
+    const data = this.state.csvContent
+    const conversion = convertSpreadsheet({ data })
+    console.log('conversion results -> ', conversion)
+    if (conversion.success) {
+      const { csvExport, success } = conversion
+      this.setState({ csvExport, success })
+    } else {
+      const { errors, success } = conversion
+      this.setState({ errors, success })
+    }
+  }
+
+  handleCSVChange(e) {
+    this.clearErrorMessages()
+    console.log('Upload -> ', e.target.files[0])
+
+    const reader = new FileReader()
+    reader.onload = e => {
+      const csvContent = e.target.result
+      this.setState({ csvContent })
+      this.checkSpreadsheet()
+    }
+    reader.readAsText(e.target.files[0])
   }
 
   render() {
