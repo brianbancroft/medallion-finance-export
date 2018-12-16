@@ -8,10 +8,33 @@ const deductionAmountCents = amount =>
   Math.round(amount * STRIPE_DEDUCTION_PCNT + STRIPE_DEDUCTION_CENTS)
 const stringAmountDollars = amountInCents =>
   `$${Math.round(amountInCents) / 100}`
+const fullAddress = (address, city, state, zip) =>
+  `${address} - ${city} ${state} - ${zip}`
+
+function csvToArray(text) {
+  let p = '',
+    row = [''],
+    ret = [row],
+    i = 0,
+    r = 0,
+    s = !0,
+    l
+  for (l of text) {
+    if ('"' === l) {
+      if (s && l === p) row[i] += l
+      s = !s
+    } else if (',' === l && s) l = row[++i] = ''
+    else if ('\n' === l && s) {
+      if ('\r' === p) row[i] = row[i].slice(0, -1)
+      row = ret[++r] = [(l = '')]
+      i = 0
+    } else row[i] += l
+    p = l
+  }
+  return ret
+}
 
 export default ({ rawData } = {}) => {
-  let header
-  const rows = []
   const fullRecords = []
   let donorListCSVExport = ''
   let summaryListCSVExport = ''
@@ -19,30 +42,17 @@ export default ({ rawData } = {}) => {
 
   const desiredColumns = [
     'signup_full_name',
-    'signup_email',
-    'billing_address1',
-    'billing_city',
-    'billing_state',
-    'billing_zip',
+    'signup_email1',
+    'address1',
+    'city',
+    'state',
+    'zip',
     'amount_in_cents',
   ]
 
-  const data = compact(rawData.split('\n'))
-
-  const fullAddress = (address, city, state, zip) =>
-    `${address} - ${city} ${state} - ${zip}`
-
-  // Break content into rows and header
-  for (let i = 0; i < data.length; i++) {
-    if (i === 0) {
-      header = data[i].split(',')
-    } else {
-      if (data[i].split(',').length > 1) {
-        const row = data[i].split(',')
-        if (compact(row).length > 0) rows.push(data[i].split(','))
-      }
-    }
-  }
+  const data = compact(csvToArray(rawData))
+  const [header, ...rows] = data
+  rows.pop()
 
   // Check if there's more than one content row. Exit if no.
   if (rows.length === 0) {
@@ -93,10 +103,10 @@ export default ({ rawData } = {}) => {
       fullRecords[i]['deposited_amount_cents']
     )
     fullRecords[i]['full_text_address'] = fullAddress(
-      fullRecords[i]['billing_address1'],
-      fullRecords[i]['billing_city'],
-      fullRecords[i]['billing_state'],
-      fullRecords[i]['billing_zip']
+      fullRecords[i]['address1'],
+      fullRecords[i]['city'],
+      fullRecords[i]['state'],
+      fullRecords[i]['zip']
     )
   }
 

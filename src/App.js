@@ -41,7 +41,6 @@ class App extends Component {
 
   handleCSVChange(e) {
     this.clearErrorMessages()
-    console.log('Upload -> ', e.target.files[0])
 
     const reader = new FileReader()
     reader.onload = e => {
