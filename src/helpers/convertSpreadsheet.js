@@ -4,17 +4,20 @@ var STRIPE_DEDUCTION_PCNT = 2.9 / 100
 var STRIPE_DEDUCTION_CENTS = 30
 
 const depositedAmountCents = amount => amount - deductionAmountCents(amount)
+
 const deductionAmountCents = amount =>
   Math.round(amount * STRIPE_DEDUCTION_PCNT + STRIPE_DEDUCTION_CENTS)
+
 const stringAmountDollars = amountInCents =>
   `$${Math.round(amountInCents) / 100}`
+
 const fullAddress = (address, city, state, zip) =>
   `${address} - ${city} ${state} - ${zip}`
 
-function csvToArray(text) {
+const csvToArray = text => {
   let p = '',
     row = [''],
-    ret = [row],
+    returnArray = [row],
     i = 0,
     r = 0,
     s = !0,
@@ -26,12 +29,12 @@ function csvToArray(text) {
     } else if (',' === l && s) l = row[++i] = ''
     else if ('\n' === l && s) {
       if ('\r' === p) row[i] = row[i].slice(0, -1)
-      row = ret[++r] = [(l = '')]
+      row = returnArray[++r] = [(l = '')]
       i = 0
     } else row[i] += l
     p = l
   }
-  return ret
+  return returnArray
 }
 
 export default ({ rawData } = {}) => {
@@ -79,12 +82,22 @@ export default ({ rawData } = {}) => {
         fullRecords[j][desiredColumns[i]] = rows[j][itemIndex]
       }
     } else {
-      errors.push({
-        title: `Missing column: ${desiredColumns[i]}`,
-        message: `The column ${
-          desiredColumns[i]
-        } is missing. This is likely due to an upgrade of the nationbuilder app. Please contact the author of the app at the bottom`,
-      })
+      const backupIndex = header.indexOf(`billing_${desiredColumns[i]}`)
+      if (backupIndex !== -1) {
+        for (let j = 0; j < rows.length; j++) {
+          if (fullRecords[j] === undefined) {
+            fullRecords.push({})
+          }
+          fullRecords[j][desiredColumns[i]] = rows[j][backupIndex]
+        }
+      } else {
+        errors.push({
+          title: `Missing column: ${desiredColumns[i]}`,
+          message: `The column ${
+            desiredColumns[i]
+          } is missing. This is likely due to an upgrade of the nationbuilder app. Please contact the author of the app at the bottom`,
+        })
+      }
     }
   }
 
