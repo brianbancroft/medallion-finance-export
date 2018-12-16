@@ -1,18 +1,27 @@
 import React, { Component } from 'react'
-import styled from '@emotion/styled'
-import { Card, Icon } from 'semantic-ui-react'
+import { Main, Footer, PrivacyModal } from './components'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      viewModal: false,
+    }
+  }
+
+  toggleModal() {
+    this.setState({ viewModal: !this.state.viewModal })
+  }
+
   render() {
     return (
       <>
-        <h1>Convert Nationbuilder CSV to Useful Spreadsheets</h1>
-        <Card
-          image="https://placeimg.com/200/200/any"
-          header="Elliot Baker"
-          meta="Friend"
-          description="Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat."
+        <PrivacyModal
+          toggleModal={this.toggleModal.bind(this)}
+          viewModal={this.state.viewModal}
         />
+        <Main />
+        <Footer toggleModal={this.toggleModal.bind(this)} />
       </>
     )
   }
