@@ -26,8 +26,8 @@ class App extends Component {
   }
 
   checkSpreadsheet() {
-    const data = this.state.csvContent
-    const conversion = convertSpreadsheet({ data })
+    const rawData = this.state.csvContent
+    const conversion = convertSpreadsheet({ rawData })
     console.log('conversion results -> ', conversion)
     if (conversion.success) {
       const { csvExport, success } = conversion

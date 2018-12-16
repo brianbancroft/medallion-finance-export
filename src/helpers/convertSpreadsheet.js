@@ -4,7 +4,9 @@ import {
   stringAmountDollars,
 } from '.'
 
-export default ({ data } = {}) => {
+import { compact } from 'lodash'
+
+export default ({ rawData } = {}) => {
   let header
   const rows = []
   const fullRecords = []
@@ -14,12 +16,14 @@ export default ({ data } = {}) => {
   const desiredColumns = [
     'signup_full_name',
     'signup_email',
-    'address1',
-    'city',
-    'state',
-    'zip',
+    'billing_address1',
+    'billing_city',
+    'billing_state',
+    'billing_zip',
     'amount_in_cents',
   ]
+
+  const data = compact(rawData.split('\n'))
 
   const fullAddress = (address, city, state, zip) =>
     `${address}, ${city} ${state}, ${zip}`
@@ -30,15 +34,29 @@ export default ({ data } = {}) => {
       header = data[i].split(',')
     } else {
       if (data[i].split(',').length > 1) {
-        rows.push(data[i].split(','))
+        const row = data[i].split(',')
+        if (compact(row).length > 0) rows.push(data[i].split(','))
       }
+    }
+  }
+
+  // Check if there's more than one content row. Exit if no.
+  if (rows.length === 0) {
+    return {
+      success: false,
+      errors: [
+        {
+          title: 'No data present',
+          message: "Verify the CSV file. We can't find any records here.",
+        },
+      ],
     }
   }
 
   // Get the column index for the desired content
   for (let i = 0; i < desiredColumns.length; i++) {
     const itemIndex = header.indexOf(desiredColumns[i])
-    if (itemIndex) {
+    if (itemIndex !== -1) {
       for (let j = 0; j < rows.length; j++) {
         if (fullRecords[j] === undefined) {
           fullRecords.push({})
@@ -47,7 +65,7 @@ export default ({ data } = {}) => {
       }
     } else {
       errors.push({
-        title: `Missing: ${desiredColumns[i]}`,
+        title: `Missing column: ${desiredColumns[i]}`,
         message: `The column ${
           desiredColumns[i]
         } is missing. This is likely due to an upgrade of the nationbuilder app. Please contact the author of the app at the bottom`,

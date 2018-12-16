@@ -70,7 +70,7 @@ const Main = ({ handleCSVChange, errors, success } = {}) => (
 
             <Card.Description>
               <Form success={success} error={errors.length > 0}>
-                <Form.Group style={{ width: '100%' }}>
+                <Form.Group style={{ width: '100%', marginLeft: '0px' }}>
                   {' '}
                   <Input
                     fluid

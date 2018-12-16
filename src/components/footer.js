@@ -43,7 +43,7 @@ const Footer = ({ toggleModal } = {}) => (
   <FooterSection>
     <div className="left-matter">
       <a
-        href="//www.mississauga-lakeshoreconservative.com/"
+        href="https://www.mississauga-lakeshoreconservative.com/"
         target="_blank"
         rel="noopener noreferrer"
       >

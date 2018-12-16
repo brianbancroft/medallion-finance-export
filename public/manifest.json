@@ -1,7 +1,13 @@
 {
   "short_name": "Medallion Finance Conversion",
   "name": "Convert Medallion finance export spreadsheets to a useable format",
-
+  "icons": [
+    {
+      "src": "/public/favicon.png",
+      "sizes": "any",
+      "type": "png"
+    }
+  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
