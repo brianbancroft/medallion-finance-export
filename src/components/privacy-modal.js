@@ -16,17 +16,21 @@ const PrivacyModal = ({ viewModal, toggleModal }) => (
           The conversion process is client-side. It's all on your browser
         </ModalPoint>
         <ModalPoint>
-          We collect cookies to monitor usage (using Google Analytics). Not the
-          csv.
+          We collect cookies to monitor usage (using Google Analytics).
         </ModalPoint>
+        <ModalPoint>We don't collect any other data. Period.</ModalPoint>
         <ModalPoint>
           This is an open-source tool.{' '}
           <a
             href="https://github.com/brianbancroft/medallion-finance-export"
             target="_blank"
           >
-            See the code for yourself.
+            See the code for yourself. Build it. Test it.
           </a>
+        </ModalPoint>
+        <ModalPoint>
+          Deployment of this app is through Netlify, connected to the Github
+          Repo.
         </ModalPoint>
       </>
     }

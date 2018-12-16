@@ -6,11 +6,29 @@ class App extends Component {
     super(props)
     this.state = {
       viewModal: false,
+      csvContent: null,
+      errors: [],
+      success: false,
     }
   }
 
   toggleModal() {
     this.setState({ viewModal: !this.state.viewModal })
+  }
+
+  clearErrorMessages() {
+    this.setState({ errors: [] })
+  }
+
+  addErrorMessage({ title, message }) {
+    this.setState({ errors: this.state.errors.push({ title, message }) })
+  }
+
+  async handleCSVChange(e) {
+    const fileReader = new FileReader()
+    const upload = e.target.files[0]
+    await fileReader.readAsText(upload)
+    this.setState({ csvContent: fileReader.result })
   }
 
   render() {
@@ -20,7 +38,11 @@ class App extends Component {
           toggleModal={this.toggleModal.bind(this)}
           viewModal={this.state.viewModal}
         />
-        <Main />
+        <Main
+          handleCSVChange={this.handleCSVChange.bind(this)}
+          errors={this.state.errors}
+          success={this.state.success}
+        />
         <Footer toggleModal={this.toggleModal.bind(this)} />
       </>
     )

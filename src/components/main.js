@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { NoMobileSupport, TopInstructionCard } from '.'
-import { Card, Icon, Label, Form } from 'semantic-ui-react'
+import { Card, Input, Form, Message, Button } from 'semantic-ui-react'
 
 const MainSection = styled.section`
   position: fixed;
@@ -14,7 +14,7 @@ const MainSection = styled.section`
   justify-content: center;
 
   .container {
-    width: 80%;
+    width: 65vw;
     margin: 0 auto;
   }
 `
@@ -25,13 +25,28 @@ const PreventMobileSupport = styled('div')`
   }
 `
 
-const Main = () => (
+const ErrorItem = (error, key) => (
+  <Message error key={key} header={error.title} content={error.message} />
+)
+const errorList = errors => errors.map(ErrorItem)
+
+const SuccessMessage = () => (
+  <Message
+    success
+    header="All Good!"
+    content="You can now download the converted files"
+  />
+)
+
+const Main = ({ handleCSVChange, errors, success } = {}) => (
   <MainSection>
     <div className="container">
       <NoMobileSupport />
 
       <PreventMobileSupport>
-        <h2>Convert your nationbuilder exports to ... in two easy steps</h2>
+        <h2>
+          Clean your mEDAllion finance exports - in <em>two</em> easy steps
+        </h2>
         <TopInstructionCard />
 
         <Card fluid>
@@ -39,16 +54,24 @@ const Main = () => (
             <Card.Header>Upload the CSV here</Card.Header>
 
             <Card.Description>
-              <Form>
+              <Form success={success} error={errors.length > 0}>
                 <Form.Group widths="equal">
-                  <Label width="4" as="label" htmlFor="file" size="big">
-                    <Icon name="file" />
-                    CSV File
-                  </Label>
+                  {' '}
+                  <Input
+                    fluid
+                    type="file"
+                    name="file"
+                    icon="file text outline"
+                    iconPosition="left"
+                    placeholder="UploadCSV..."
+                    onChange={handleCSVChange}
+                  />
                   <input id="file" hidden type="file" />
                 </Form.Group>
+                {errorList(errors)}
+                <SuccessMessage />
 
-                <Form.Button>Submit</Form.Button>
+                <Button>Submit</Button>
               </Form>
             </Card.Description>
           </Card.Content>
