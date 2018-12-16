@@ -1,10 +1,13 @@
-import {
-  deductionAmountCents,
-  depositedAmountCents,
-  stringAmountDollars,
-} from '.'
-
 import { compact } from 'lodash'
+
+var STRIPE_DEDUCTION_PCNT = 2.9 / 100
+var STRIPE_DEDUCTION_CENTS = 30
+
+const depositedAmountCents = amount => amount - deductionAmountCents(amount)
+const deductionAmountCents = amount =>
+  Math.round(amount * STRIPE_DEDUCTION_PCNT + STRIPE_DEDUCTION_CENTS)
+const stringAmountDollars = amountInCents =>
+  `$${Math.round(amountInCents) / 100}`
 
 export default ({ rawData } = {}) => {
   let header
@@ -105,8 +108,6 @@ export default ({ rawData } = {}) => {
     processor_deducation: i.processor_deduction_amount_dollars,
     deposited_amount: i.deposited_amount_dollars,
   }))
-
-  console.log('Donor List csv export -> ', exportableRecords)
 
   donorListCSVExport += Object.keys(exportableRecords[0]).join(', ') + '\n'
   exportableRecords.forEach(
