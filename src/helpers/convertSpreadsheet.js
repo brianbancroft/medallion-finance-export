@@ -1,18 +1,15 @@
-const fs = require('fs')
-
-const {
+import {
   deductionAmountCents,
   depositedAmountCents,
   stringAmountDollars,
-} = require('../helpers')
+} from '.'
 
-module.exports = ({ sourceFile } = {}) => {
-  const contents = fs.readFileSync(sourceFile, 'utf8').split('\n')
-
+export default ({ data } = {}) => {
   let header
   const rows = []
   const fullRecords = []
   const csvExport = []
+  const errors = []
 
   const desiredColumns = [
     'signup_full_name',
@@ -28,12 +25,12 @@ module.exports = ({ sourceFile } = {}) => {
     `${address}, ${city} ${state}, ${zip}`
 
   // Break content into rows and header
-  for (let i = 0; i < contents.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     if (i === 0) {
-      header = contents[i].split(',')
+      header = data[i].split(',')
     } else {
-      if (contents[i].split(',').length > 1) {
-        rows.push(contents[i].split(','))
+      if (data[i].split(',').length > 1) {
+        rows.push(data[i].split(','))
       }
     }
   }
@@ -41,12 +38,20 @@ module.exports = ({ sourceFile } = {}) => {
   // Get the column index for the desired content
   for (let i = 0; i < desiredColumns.length; i++) {
     const itemIndex = header.indexOf(desiredColumns[i])
-
-    for (let j = 0; j < rows.length; j++) {
-      if (fullRecords[j] === undefined) {
-        fullRecords.push({})
+    if (itemIndex) {
+      for (let j = 0; j < rows.length; j++) {
+        if (fullRecords[j] === undefined) {
+          fullRecords.push({})
+        }
+        fullRecords[j][desiredColumns[i]] = rows[j][itemIndex]
       }
-      fullRecords[j][desiredColumns[i]] = rows[j][itemIndex]
+    } else {
+      errors.push({
+        title: `Missing: ${desiredColumns[i]}`,
+        message: `The column ${
+          desiredColumns[i]
+        } is missing. This is likely due to an upgrade of the nationbuilder app. Please contact the author of the app at the bottom`,
+      })
     }
   }
 
@@ -84,11 +89,13 @@ module.exports = ({ sourceFile } = {}) => {
   csvExport.push(Object.keys(exportableRecords[0]).join(', '))
   exportableRecords.forEach(i => csvExport.push(Object.values(i).join(', ')))
 
-  fs.writeFile('export.csv', csvExport.join('\n'), function(err) {
-    if (err) {
-      return console.log(err)
-    }
-
-    console.log('The file was saved!')
-  })
+  return errors
+    ? {
+        success: false,
+        errors,
+      }
+    : {
+        success: true,
+        data: csvExport,
+      }
 }

@@ -1,1 +1,0 @@
-exports.convertSpreadsheet = require('./convertSpreadsheet')
