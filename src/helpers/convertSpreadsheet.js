@@ -51,6 +51,7 @@ export default ({ rawData } = {}) => {
     'state',
     'zip',
     'amount_in_cents',
+    'created_at',
   ]
 
   const data = compact(csvToArray(rawData))
@@ -127,17 +128,20 @@ export default ({ rawData } = {}) => {
   const exportableRecords = fullRecords.map(i => ({
     name: i.signup_full_name,
     address: i.full_text_address,
+    date: i.created_at,
     donated_amount: stringAmountDollars(i.amount_in_cents),
     processor_deducation: i.processor_deduction_amount_dollars,
     deposited_amount: i.deposited_amount_dollars,
   }))
 
+  console.log(exportableRecords)
+
   donorListCSVExport += Object.keys(exportableRecords[0]).join(', ') + '\n'
   exportableRecords.forEach(
     i =>
-      (donorListCSVExport += `${i.name},${i.address},${i.donated_amount},${
-        i.processor_deducation
-      },${i.deposited_amount}\n`)
+      (donorListCSVExport += `${i.name},${i.address},${i.date},${
+        i.donated_amount
+      },${i.processor_deducation},${i.deposited_amount}\n`)
   )
 
   return errors.length > 0
