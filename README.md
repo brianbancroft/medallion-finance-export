@@ -1,6 +1,6 @@
 # Nationbuilder Finance Transform Tool
 
-## [medallion-donation-export.bancroft.io](https://medallion-donantion-export.bancroft.io)
+## [live](https://d3jqwzueqzu6xe.cloudfront.net/index.html)
 
 Built to transform the Nationbuilder finance export format into something a bit more usable. This generates two files:
 
@@ -8,4 +8,7 @@ Built to transform the Nationbuilder finance export format into something a bit 
 - The other is for EDA records.
 
 
-Built with create-react-app. See [here]('./create-react-app.md) for setup instructions
+
+## Getting Started
+
+This is a basic app that uses create-react-app, and familiarity with modifying this app is about the same as that of using CRA. 
